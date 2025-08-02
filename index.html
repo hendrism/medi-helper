@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medicine Tracker</title>
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIk1lZGljaW5lIFRyYWNrZXIiLAogICJzaG9ydF9uYW1lIjogIk1lZFRyYWNrZXIiLAogICJkZXNjcmlwdGlvbiI6ICJUcmFjayB5b3VyIG1lZGljaW5lIGRvc2VzIiwKICAic3RhcnRfdXJsIjogIi8iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJ0aGVtZV9jb2xvciI6ICIjNGY0NmU1IiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjZmZmZmZmIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sO2Jhc2U2NCxQSE4yWnlCM2FXUjBhRDBpTWpRaUlHaGxhV2RvZEQwaU1qUWlJSFpwWlhkQ2IzZzlJakFnTUNBeU5DQXlOQ0lnWm1sc2JEMGlJelEwTkRRME5DSWdlRzFzYm5NOUltaDBkSEE2THk5M2QzY3Vkek11YjNKbkx6SXdNREF2YzNabklqNEtJQ0E4Y21WamRDQjRQU0l5SWlCNVBTSXlJaUIzYVdSMGFEMGlNakFpSUdobGFXZG9kRDBpTWpBaUlISjRQU0l6SWlCeWVUMGlNeUlnWm1sc2JEMGlJM1JtWmdJaUx6NEtJQ0E4Y21WamRDQjRQU0kwSWlCNVBTSTJJaUIzYVdSMGFEMGlNVFlpSUdobGFXZG9kRDBpTVRJaUlIUjRQU0l6SWlCeWVUMGlNaUlnWm1sc2JEMGlJM0Z3Y21BMUlpOCtDaUFnUEhKbFkzUWdlRDBpTVRJaUlIazlJakl1TlNJZ2QybGtkR2c5SWpnMElHaGxhV2RvZEQwaU1URWlJSEo0UFNJeUlpQnllVDBpTWlJZ1ptbHNiRDBpSTJaeE5UUmhNU0l2UGdvOEwzTjJaejQ9IiwKICAgICAgInNpemVzIjogIjI0eDI0IiwKICAgICAgInR5cGUiOiAiaW1hZ2Uvc3ZnK3htbCIKICAgIH0sCiAgICB7CiAgICAgICJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sO2Jhc2U2NCxQSE4yWnlCM2FXUjBhRDBpTVRneUlHaGxhV2RvZEQwaU1UZ3lJSFpwWlhkQ2IzZzlJakFnTUNBeE9ESWdNVGd5SWlCbWFXeHNQU0lqTkRRME5EUTBJaUI0Yld4dWN6MGlhSFIwY0RvdkwzZDNkeTUzTXk1dmNtY3ZNakF3TUM5emRtY2lQZ29nSUR4eVpXTjBJSGc5SWpFMUlpQjVQU0l4TlNJZ2QybGtkR2c5SWpFMU1pSWdhR1ZwWjJoMFBTSXhOVElpSUhKNFBTSXhNaUlnY25rOUlqRXlJaUJtYVd4c1BTSWpkR1ptSWk4K0NpQWdQSEpsWTNRZ2VEMGlNekFpSUhrOUlqUTFJaUIzYVdSMGFEMGlNVEl3SWlCb1pXbG5hSFE5SWprek1pSWdjbmc5SWpRaUlISjVQU0kwSWlCbWFXeHNQU0lqY1hCeVlUVWlMejRLSUNBOGNtVmpkQ0I0UFNJek1DSXJOVE1pSUhrOUlqTXdJaUIzYVdSMGFEMGlOVE1pSUdobGFXZG9kRDBpTVRJeUlpQnllRDBpTkNJZ2NuazlJalFpSUdacGJHdzlJaU5tZFdZeU1ERWlMejRLUEM5emRtYysrIiwKICAgICAgInNpemVzIjogIjE5MngxOTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9zdmcreG1sIgogICAgfSwKICAgIHsKICAgICAgInNyYyI6ICJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUIzYVdSMGFEMGlOVEV5SWlCb1pXbG5hSFE5SWpVeE1pSWdkbWxsZDBKdmVEMGlNQ0F3SURVeE1pQTFNVElpSUdacGJHdzlJaU0wTkRRME5EUWlJSGh0Ykc1elBTSm9kSFJ3T2k4dmQzZDNMbmN6TG05eVp5OHlNREF3TDNOMlp5SStDaUFnUEhKbFkzUWdlRDBpTXpraUlIazlJek5pSUhkcFpIUm9QU0l6T0RRaUlHaGxhV2RvZEQwaU16ZzBJaUJ5ZUQwaU1qQWlJSEo1UFNJeU1DSWdabWxzYkQwaUkzUm1aaUl2UGdvZ0lEeHlaV04wSUhnOUlqTTNMMjAnUFNJeE5Ua2lJSGc5SWprMElpQjNhV1IwYUQwaU1qUXdJaUJvWldsbmFIUTlJakkzTWlKcGVEMGlNakFpSUhKNVBTSTRJaUJtYVd4c1BTSWpjWEJ5WVRVaUx6NEtJQ0E4Y21WamRDQjRQU0l4TXpBaUlIazlJemN5SWlCNFBTSXdJaUIzYVdSMGFEMGlNalEwSWlCb1pXbG5hSFE5SWpneElpQnllRDBpT0NJZ2NuazlJamdpSUdacGJHdzlJaU5tZFdZeU1ERWlMejRLUEM5emRtYys9IiwKICAgICAgInNpemVzIjogIjUxMng1MTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9zdmcreG1sIgogICAgfQogIF0KfQ==">
+    <meta name="theme-color" content="#4f46e5">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+```
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        color: #1f2937;
+    }
+
+    .container {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        min-height: 100vh;
+    }
+
+    .header {
+        background: white;
+        border-radius: 16px;
+        padding: 24px;
+        margin-bottom: 20px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+
+    .header h1 {
+        color: #4f46e5;
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .header p {
+        color: #6b7280;
+        font-size: 14px;
+    }
+
+    .card {
+        background: white;
+        border-radius: 16px;
+        padding: 24px;
+        margin-bottom: 20px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #374151;
+    }
+
+    input, select {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        font-size: 16px;
+        transition: all 0.2s;
+    }
+
+    input:focus, select:focus {
+        outline: none;
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+
+    .btn {
+        background: #4f46e5;
+        color: white;
+        border: none;
+        padding: 14px 24px;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        width: 100%;
+        transition: all 0.2s;
+    }
+
+    .btn:hover {
+        background: #4338ca;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    }
+
+    .btn:active {
+        transform: translateY(0);
+    }
+
+    .btn-secondary {
+        background: #e5e7eb;
+        color: #374151;
+    }
+
+    .btn-secondary:hover {
+        background: #d1d5db;
+    }
+
+    .dose-grid {
+        display: grid;
+        gap: 12px;
+    }
+
+    .day-section {
+        background: #f9fafb;
+        border-radius: 12px;
+        padding: 16px;
+        border: 1px solid #e5e7eb;
+    }
+
+    .day-header {
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .day-progress {
+        font-size: 12px;
+        color: #6b7280;
+        background: #e5e7eb;
+        padding: 4px 8px;
+        border-radius: 20px;
+    }
+
+    .dose-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px;
+        background: white;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+        margin-bottom: 8px;
+        transition: all 0.2s;
+    }
+
+    .dose-item.completed {
+        background: #ecfdf5;
+        border-color: #10b981;
+    }
+
+    .dose-checkbox {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        accent-color: #10b981;
+    }
+
+    .dose-time {
+        flex: 1;
+        font-weight: 500;
+    }
+
+    .dose-item.completed .dose-time {
+        color: #059669;
+        text-decoration: line-through;
+    }
+
+    .setup-screen {
+        display: block;
+    }
+
+    .tracker-screen {
+        display: none;
+    }
+
+    .progress-summary {
+        background: #f0f9ff;
+        border: 1px solid #0ea5e9;
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .progress-text {
+        font-size: 18px;
+        font-weight: 600;
+        color: #0369a1;
+    }
+
+    .progress-bar {
+        background: #e0f2fe;
+        height: 8px;
+        border-radius: 4px;
+        margin: 12px 0;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        background: #0ea5e9;
+        height: 100%;
+        transition: width 0.3s ease;
+        border-radius: 4px;
+    }
+
+    .hidden {
+        display: none !important;
+    }
+</style>
+```
+
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💊 Medicine Tracker</h1>
+            <p>Never miss a dose</p>
+        </div>
+
+```
+    <!-- Setup Screen -->
+    <div id="setupScreen" class="setup-screen">
+        <div class="card">
+            <h2 style="margin-bottom: 20px; color: #374151;">Set Up Your Medicine</h2>
+            
+            <div class="form-group">
+                <label for="medicineName">Medicine Name</label>
+                <input type="text" id="medicineName" placeholder="e.g., Ibuprofen">
+            </div>
+
+            <div class="form-group">
+                <label for="startDate">Start Date</label>
+                <input type="date" id="startDate">
+            </div>
+
+            <div class="form-group">
+                <label for="dosesPerDay">Doses Per Day</label>
+                <select id="dosesPerDay">
+                    <option value="1">1 dose per day</option>
+                    <option value="2">2 doses per day</option>
+                    <option value="3">3 doses per day</option>
+                    <option value="4">4 doses per day</option>
+                    <option value="6">6 doses per day</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="totalDays">Number of Days</label>
+                <input type="number" id="totalDays" min="1" max="365" placeholder="e.g., 7">
+            </div>
+
+            <button class="btn" onclick="startTracking()">Start Tracking</button>
+        </div>
+    </div>
+
+    <!-- Tracker Screen -->
+    <div id="trackerScreen" class="tracker-screen">
+        <div class="progress-summary">
+            <div class="progress-text" id="progressText">0 of 0 doses taken</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 id="medicineTitle" style="color: #374151;"></h2>
+                <button class="btn btn-secondary" onclick="resetApp()" style="width: auto; padding: 8px 16px; font-size: 14px;">New Medicine</button>
+            </div>
+            
+            <div id="doseSchedule" class="dose-grid"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let medicineData = {
+        name: '',
+        startDate: '',
+        dosesPerDay: 1,
+        totalDays: 1,
+        schedule: []
+    };
+
+    // Set today's date as default
+    document.getElementById('startDate').valueAsDate = new Date();
+
+    function generateDoseTimes(dosesPerDay) {
+        const times = [];
+        if (dosesPerDay === 1) {
+            times.push('08:00');
+        } else if (dosesPerDay === 2) {
+            times.push('08:00', '20:00');
+        } else if (dosesPerDay === 3) {
+            times.push('08:00', '14:00', '20:00');
+        } else if (dosesPerDay === 4) {
+            times.push('08:00', '12:00', '16:00', '20:00');
+        } else if (dosesPerDay === 6) {
+            times.push('08:00', '10:00', '12:00', '14:00', '16:00', '18:00');
+        }
+        return times;
+    }
+
+    function formatDate(date) {
+        return date.toLocaleDateString('en-US', { 
+            weekday: 'long', 
+            month: 'short', 
+            day: 'numeric' 
+        });
+    }
+
+    function startTracking() {
+        const name = document.getElementById('medicineName').value.trim();
+        const startDate = document.getElementById('startDate').value;
+        const dosesPerDay = parseInt(document.getElementById('dosesPerDay').value);
+        const totalDays = parseInt(document.getElementById('totalDays').value);
+
+        if (!name || !startDate || !totalDays) {
+            alert('Please fill in all fields');
+            return;
+        }
+
+        medicineData = {
+            name,
+            startDate,
+            dosesPerDay,
+            totalDays,
+            schedule: []
+        };
+
+        // Generate schedule
+        const startDateObj = new Date(startDate);
+        const doseTimes = generateDoseTimes(dosesPerDay);
+
+        for (let day = 0; day < totalDays; day++) {
+            const currentDate = new Date(startDateObj);
+            currentDate.setDate(startDateObj.getDate() + day);
+            
+            const daySchedule = {
+                date: currentDate,
+                doses: doseTimes.map((time, index) => ({
+                    id: `day${day}_dose${index}`,
+                    time,
+                    completed: false
+                }))
+            };
+            
+            medicineData.schedule.push(daySchedule);
+        }
+
+        renderTracker();
+        showScreen('tracker');
+    }
+
+    function renderTracker() {
+        document.getElementById('medicineTitle').textContent = medicineData.name;
+        
+        const scheduleContainer = document.getElementById('doseSchedule');
+        scheduleContainer.innerHTML = '';
+
+        medicineData.schedule.forEach((day, dayIndex) => {
+            const dayElement = document.createElement('div');
+            dayElement.className = 'day-section';
+            
+            const completedDoses = day.doses.filter(dose => dose.completed).length;
+            const totalDoses = day.doses.length;
+            
+            dayElement.innerHTML = `
+                <div class="day-header">
+                    <span>${formatDate(day.date)}</span>
+                    <span class="day-progress">${completedDoses}/${totalDoses}</span>
+                </div>
+            `;
+
+            day.doses.forEach(dose => {
+                const doseElement = document.createElement('div');
+                doseElement.className = `dose-item ${dose.completed ? 'completed' : ''}`;
+                doseElement.innerHTML = `
+                    <input type="checkbox" class="dose-checkbox" 
+                           ${dose.completed ? 'checked' : ''} 
+                           onchange="toggleDose('${dose.id}')">
+                    <span class="dose-time">${dose.time}</span>
+                `;
+                dayElement.appendChild(doseElement);
+            });
+
+            scheduleContainer.appendChild(dayElement);
+        });
+
+        updateProgress();
+    }
+
+    function toggleDose(doseId) {
+        for (let day of medicineData.schedule) {
+            for (let dose of day.doses) {
+                if (dose.id === doseId) {
+                    dose.completed = !dose.completed;
+                    renderTracker();
+                    return;
+                }
+            }
+        }
+    }
+
+    function updateProgress() {
+        let totalDoses = 0;
+        let completedDoses = 0;
+
+        medicineData.schedule.forEach(day => {
+            totalDoses += day.doses.length;
+            completedDoses += day.doses.filter(dose => dose.completed).length;
+        });
+
+        const percentage = totalDoses > 0 ? (completedDoses / totalDoses) * 100 : 0;
+        
+        document.getElementById('progressText').textContent = 
+            `${completedDoses} of ${totalDoses} doses taken`;
+        document.getElementById('progressFill').style.width = `${percentage}%`;
+    }
+
+    function resetApp() {
+        document.getElementById('medicineName').value = '';
+        document.getElementById('totalDays').value = '';
+        document.getElementById('startDate').valueAsDate = new Date();
+        document.getElementById('dosesPerDay').value = '1';
+        showScreen('setup');
+    }
+
+    function showScreen(screen) {
+        if (screen === 'setup') {
+            document.getElementById('setupScreen').classList.remove('hidden');
+            document.getElementById('trackerScreen').classList.add('hidden');
+        } else {
+            document.getElementById('setupScreen').classList.add('hidden');
+            document.getElementById('trackerScreen').classList.remove('hidden');
+        }
+    }
+
+    // PWA functionality - the manifest enables installation
+    // Service worker would normally be here for offline caching
+    console.log('Medicine Tracker PWA ready!');
+</script>
+```
+
+</body>
+</html>
