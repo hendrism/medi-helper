@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Medicine Tracker</title>
-    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIk1lZGljaW5lIFRyYWNrZXIiLAogICJzaG9ydF9uYW1lIjogIk1lZFRyYWNrZXIiLAogICJkZXNjcmlwdGlvbiI6ICJUcmFjayB5b3VyIG1lZGljaW5lIGRvc2VzIiwKICAic3RhcnRfdXJsIjogIi8iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJ0aGVtZV9jb2xvciI6ICIjNGY0NmU1IiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjZmZmZmZmIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sO2Jhc2U2NCxQSE4yWnlCM2FXUjBhRDBpTWpRaUlHaGxhV2RvZEQwaU1qUWlJSFpwWlhkQ2IzZzlJakFnTUNBeU5DQXlOQ0lnWm1sc2JEMGlJelEwTkRRME5DSWdlRzFzYm5NOUltaDBkSEE2THk5M2QzY3Vkek11YjNKbkx6SXdNREF2YzNabklqNEtJQ0E4Y21WamRDQjRQU0l5SWlCNVBTSXlJaUIzYVdSMGFEMGlNakFpSUdobGFXZG9kRDBpTWpBaUlISjRQU0l6SWlCeWVUMGlNeUlnWm1sc2JEMGlJM1JtWmdJaUx6NEtJQ0E4Y21WamRDQjRQU0kwSWlCNVBTSTJJaUIzYVdSMGFEMGlNVFlpSUdobGFXZG9kRDBpTVRJaUlIUjRQU0l6SWlCeWVUMGlNaUlnWm1sc2JEMGlJM0Z3Y21BMUlpOCtDaUFnUEhKbFkzUWdlRDBpTVRJaUlIazlJakl1TlNJZ2QybGtkR2c5SWpnMElHaGxhV2RvZEQwaU1URWlJSEo0UFNJeUlpQnllVDBpTWlJZ1ptbHNiRDBpSTJaeE5UUmhNU0l2UGdvOEwzTjJaejQ9IiwKICAgICAgInNpemVzIjogIjI0eDI0IiwKICAgICAgInR5cGUiOiAiaW1hZ2Uvc3ZnK3htbCIKICAgIH0sCiAgICB7CiAgICAgICJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sO2Jhc2U2NCxQSE4yWnlCM2FXUjBhRDBpTVRneUlHaGxhV2RvZEQwaU1UZ3lJSFpwWlhkQ2IzZzlJakFnTUNBeE9ESWdNVGd5SWlCbWFXeHNQU0lqTkRRME5EUTBJaUI0Yld4dWN6MGlhSFIwY0RvdkwzZDNkeTUzTXk1dmNtY3ZNakF3TUM5emRtY2lQZ29nSUR4eVpXTjBJSGc5SWpFMUlpQjVQU0l4TlNJZ2QybGtkR2c5SWpFMU1pSWdhR1ZwWjJoMFBTSXhOVElpSUhKNFBTSXhNaUlnY25rOUlqRXlJaUJtYVd4c1BTSWpkR1ptSWk4K0NpQWdQSEpsWTNRZ2VEMGlNekFpSUhrOUlqUTFJaUIzYVdSMGFEMGlNVEl3SWlCb1pXbG5hSFE5SWprek1pSWdjbmc5SWpRaUlISjVQU0kwSWlCbWFXeHNQU0lqY1hCeVlUVWlMejRLSUNBOGNtVmpkQ0I0UFNJek1DSXJOVE1pSUhrOUlqTXdJaUIzYVdSMGFEMGlOVE1pSUdobGFXZG9kRDBpTVRJeUlpQnllRDBpTkNJZ2NuazlJalFpSUdacGJHdzlJaU5tZFdZeU1ERWlMejRLUEM5emRtYysrIiwKICAgICAgInNpemVzIjogIjE5MngxOTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9zdmcreG1sIgogICAgfSwKICAgIHsKICAgICAgInNyYyI6ICJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUIzYVdSMGFEMGlOVEV5SWlCb1pXbG5hSFE5SWpVeE1pSWdkbWxsZDBKdmVEMGlNQ0F3SURVeE1pQTFNVElpSUdacGJHdzlJaU0wTkRRME5EUWlJSGh0Ykc1elBTSm9kSFJ3T2k4dmQzZDNMbmN6TG05eVp5OHlNREF3TDNOMlp5SStDaUFnUEhKbFkzUWdlRDBpTXpraUlIazlJek5pSUhkcFpIUm9QU0l6T0RRaUlHaGxhV2RvZEQwaU16ZzBJaUJ5ZUQwaU1qQWlJSEo1UFNJeU1DSWdabWxzYkQwaUkzUm1aaUl2UGdvZ0lEeHlaV04wSUhnOUlqTTNMMjAnUFNJeE5Ua2lJSGc5SWprMElpQjNhV1IwYUQwaU1qUXdJaUJvWldsbmFIUTlJakkzTWlKcGVEMGlNakFpSUhKNVBTSTRJaUJtYVd4c1BTSWpjWEJ5WVRVaUx6NEtJQ0E4Y21WamRDQjRQU0l4TXpBaUlIazlJemN5SWlCNFBTSXdJaUIzYVdSMGFEMGlNalEwSWlCb1pXbG5hSFE5SWpneElpQnllRDBpT0NJZ2NuazlJamdpSUdacGJHdzlJaU5tZFdZeU1ERWlMejRLUEM5emRtYys9IiwKICAgICAgInNpemVzIjogIjUxMng1MTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9zdmcreG1sIgogICAgfQogIF0KfQ==">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="/icons/icon-192.svg" type="image/svg+xml">
     <meta name="theme-color" content="#4f46e5">
     <style>
         * {
@@ -14,7 +15,6 @@
             box-sizing: border-box;
         }
 
-```
     body {
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -221,7 +221,6 @@
         display: none !important;
     }
 </style>
-```
 
 </head>
 <body>
@@ -231,7 +230,6 @@
             <p>Never miss a dose</p>
         </div>
 
-```
     <!-- Setup Screen -->
     <div id="setupScreen" class="setup-screen">
         <div class="card">
@@ -450,11 +448,14 @@
         }
     }
 
-    // PWA functionality - the manifest enables installation
-    // Service worker would normally be here for offline caching
+    // Register service worker for offline capabilities
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/service-worker.js');
+        });
+    }
     console.log('Medicine Tracker PWA ready!');
 </script>
-```
 
 </body>
 </html>
