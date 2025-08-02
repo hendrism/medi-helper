@@ -1,7 +1,8 @@
-const CACHE_NAME = 'med-tracker-cache-v1';
+const CACHE_NAME = 'med-tracker-cache-v2';
 const ASSETS = [
   '/',
   '/index.html',
+  '/app.js',
   '/manifest.json',
   '/icons/icon-192.svg',
   '/icons/icon-512.svg'
