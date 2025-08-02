@@ -257,7 +257,7 @@
                 <input type="date" id="startDate">
             </div>
 
-            <div class="form-group">
+            <div class="form-group" id="firstDoseGroup">
                 <label for="firstDoseTime">First Dose Time</label>
                 <input type="time" id="firstDoseTime" value="08:00">
             </div>
@@ -274,11 +274,22 @@
             </div>
 
             <div class="form-group">
+                <label for="scheduleType">Schedule Type</label>
+                <select id="scheduleType">
+                    <option value="timed">Specific times</option>
+                    <option value="label">AM/PM labels</option>
+                </select>
+            </div>
+
+            <div id="labelInputs" class="hidden"></div>
+
+            <div class="form-group">
                 <label for="totalDays">Number of Days</label>
                 <input type="number" id="totalDays" min="1" max="365" placeholder="e.g., 7">
             </div>
 
             <button class="btn" onclick="startTracking()">Start Tracking</button>
+            <button class="btn btn-secondary" onclick="confirmExit()" style="margin-top: 10px;">Home</button>
         </div>
     </div>
 
