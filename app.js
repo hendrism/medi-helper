@@ -23,20 +23,20 @@ if (typeof document !== 'undefined') {
     document.getElementById('startDate').valueAsDate = new Date();
 }
 
-function generateDoseTimes(dosesPerDay, firstDoseTime) {
-    const times = [];
-    if (dosesPerDay === 1) {
-        times.push(firstDoseTime || '08:00');
-    } else if (dosesPerDay === 2) {
-        times.push('08:00', '20:00');
-    } else if (dosesPerDay === 3) {
-        times.push('08:00', '14:00', '20:00');
-    } else if (dosesPerDay === 4) {
-        times.push('08:00', '12:00', '16:00', '20:00');
-    } else if (dosesPerDay === 6) {
-        times.push('08:00', '10:00', '12:00', '14:00', '16:00', '18:00');
+function generateDoseTimes(dosesPerDay, firstDoseTime, scheduleType, labels) {
+    if (scheduleType === 'label') {
+        return labels;
     }
-    return times;
+    const times = [];
+    const [hours, minutes] = firstDoseTime.split(':').map(Number);
+    const interval = Math.floor((24 * 60) / dosesPerDay);
+    for (let i = 0; i < dosesPerDay; i++) {
+        const total = (hours * 60 + minutes + interval * i) % (24 * 60);
+        const h = Math.floor(total / 60).toString().padStart(2, '0');
+        const m = (total % 60).toString().padStart(2, '0');
+        times.push(`${h}:${m}`);
+    }
+    return times.sort();
 }
 
 function formatDate(date) {
@@ -47,10 +47,10 @@ function formatDate(date) {
     });
 }
 
-function createSchedule(id, startDate, dosesPerDay, totalDays, firstDoseTime) {
+function createSchedule(id, startDate, dosesPerDay, totalDays, firstDoseTime = '08:00', scheduleType = 'timed', labels = []) {
     const [year, month, dayNumber] = startDate.split('-').map(Number);
     const startDateObj = new Date(year, month - 1, dayNumber);
-    const doseTimes = generateDoseTimes(dosesPerDay, firstDoseTime);
+    const doseTimes = generateDoseTimes(dosesPerDay, firstDoseTime, scheduleType, labels);
     const totalDoses = dosesPerDay * totalDays;
     const schedule = [];
     let created = 0;
@@ -62,7 +62,7 @@ function createSchedule(id, startDate, dosesPerDay, totalDays, firstDoseTime) {
         const daySchedule = { date: currentDate.toISOString(), doses: [] };
         for (let index = 0; index < doseTimes.length && created < totalDoses; index++) {
             const time = doseTimes[index];
-            if (day === 0 && time < firstDoseTime) continue;
+            if (scheduleType === 'timed' && day === 0 && time < firstDoseTime) continue;
             daySchedule.doses.push({
                 id: `${id}_day${day}_dose${daySchedule.doses.length}`,
                 time,
@@ -81,7 +81,14 @@ function startTracking() {
     const startDate = document.getElementById('startDate').value;
     const dosesPerDay = parseInt(document.getElementById('dosesPerDay').value);
     const totalDays = parseInt(document.getElementById('totalDays').value);
+    const scheduleType = document.getElementById('scheduleType').value;
     const firstDoseTime = document.getElementById('firstDoseTime').value || '08:00';
+    let labels = [];
+    if (scheduleType === 'label') {
+        labels = Array.from(document.querySelectorAll('.dose-label')).map((input, index) =>
+            input.value.trim() || `Dose ${index + 1}`
+        );
+    }
 
     if (!name || !startDate || !totalDays) {
         alert('Please fill in all fields');
@@ -89,9 +96,9 @@ function startTracking() {
     }
 
     const id = Date.now().toString();
-    const schedule = createSchedule(id, startDate, dosesPerDay, totalDays, firstDoseTime);
+    const schedule = createSchedule(id, startDate, dosesPerDay, totalDays, firstDoseTime, scheduleType, labels);
 
-    currentMedicine = { id, name, startDate, dosesPerDay, totalDays, firstDoseTime, schedule };
+    currentMedicine = { id, name, startDate, dosesPerDay, totalDays, firstDoseTime, scheduleType, labels, schedule };
     medicines.push(currentMedicine);
     saveMedicines();
     renderHome();
@@ -196,6 +203,54 @@ function prepareSetup() {
     document.getElementById('startDate').valueAsDate = new Date();
     document.getElementById('dosesPerDay').value = '1';
     document.getElementById('firstDoseTime').value = '08:00';
+    document.getElementById('scheduleType').value = 'timed';
+    updateScheduleMode();
+}
+
+function updateLabelInputs() {
+    const type = document.getElementById('scheduleType').value;
+    const doses = parseInt(document.getElementById('dosesPerDay').value);
+    const container = document.getElementById('labelInputs');
+    if (type !== 'label') return;
+    container.innerHTML = '';
+    for (let i = 0; i < doses; i++) {
+        let defaultLabel;
+        if (doses === 1) {
+            defaultLabel = 'AM';
+        } else if (doses === 2) {
+            defaultLabel = i === 0 ? 'AM' : 'PM';
+        } else {
+            const half = Math.ceil(doses / 2);
+            const period = i < half ? 'AM' : 'PM';
+            const num = i < half ? i + 1 : i - half + 1;
+            defaultLabel = `${period}${num}`;
+        }
+        const group = document.createElement('div');
+        group.className = 'form-group';
+        group.innerHTML = `<label>Dose ${i + 1} Label</label><input type="text" class="dose-label" value="${defaultLabel}">`;
+        container.appendChild(group);
+    }
+}
+
+function updateScheduleMode() {
+    const type = document.getElementById('scheduleType').value;
+    const labelContainer = document.getElementById('labelInputs');
+    const firstDoseGroup = document.getElementById('firstDoseGroup');
+    if (type === 'label') {
+        firstDoseGroup.classList.add('hidden');
+        labelContainer.classList.remove('hidden');
+        updateLabelInputs();
+    } else {
+        firstDoseGroup.classList.remove('hidden');
+        labelContainer.classList.add('hidden');
+        labelContainer.innerHTML = '';
+    }
+}
+
+function confirmExit() {
+    if (confirm('Go back home? Medication will not be saved.')) {
+        showScreen('home');
+    }
 }
 
 function showScreen(screen) {
@@ -217,6 +272,13 @@ if (typeof window !== 'undefined') {
     loadMedicines();
     renderHome();
     showScreen('home');
+
+    document.getElementById('scheduleType').addEventListener('change', updateScheduleMode);
+    document.getElementById('dosesPerDay').addEventListener('change', () => {
+        if (document.getElementById('scheduleType').value === 'label') {
+            updateLabelInputs();
+        }
+    });
 
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
