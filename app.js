@@ -47,10 +47,15 @@ function formatDate(date) {
     });
 }
 
-function createSchedule(id, startDate, dosesPerDay, totalDays, firstDoseTime = '08:00', scheduleType = 'timed', labels = []) {
+function createSchedule(id, startDate, dosesPerDay, totalDays, firstDoseTime = '08:00', scheduleType = 'timed', labels = [], startLabel = 'AM') {
     const [year, month, dayNumber] = startDate.split('-').map(Number);
     const startDateObj = new Date(year, month - 1, dayNumber);
     const doseTimes = generateDoseTimes(dosesPerDay, firstDoseTime, scheduleType, labels);
+    let startIndex = 0;
+    if (scheduleType === 'label') {
+        startIndex = doseTimes.indexOf(startLabel);
+        if (startIndex === -1) startIndex = 0;
+    }
     const totalDoses = dosesPerDay * totalDays;
     const schedule = [];
     let created = 0;
@@ -63,6 +68,7 @@ function createSchedule(id, startDate, dosesPerDay, totalDays, firstDoseTime = '
         for (let index = 0; index < doseTimes.length && created < totalDoses; index++) {
             const time = doseTimes[index];
             if (scheduleType === 'timed' && day === 0 && time < firstDoseTime) continue;
+            if (scheduleType === 'label' && day === 0 && index < startIndex) continue;
             daySchedule.doses.push({
                 id: `${id}_day${day}_dose${daySchedule.doses.length}`,
                 time,
@@ -83,6 +89,7 @@ function startTracking() {
     const totalDays = parseInt(document.getElementById('totalDays').value);
     const scheduleType = document.getElementById('scheduleType').value;
     const firstDoseTime = document.getElementById('firstDoseTime').value || '08:00';
+    const startLabel = document.getElementById('startLabel').value || 'AM';
     let labels = [];
     if (scheduleType === 'label') {
         labels = Array.from(document.querySelectorAll('.dose-label')).map((input, index) =>
@@ -96,9 +103,9 @@ function startTracking() {
     }
 
     const id = Date.now().toString();
-    const schedule = createSchedule(id, startDate, dosesPerDay, totalDays, firstDoseTime, scheduleType, labels);
+    const schedule = createSchedule(id, startDate, dosesPerDay, totalDays, firstDoseTime, scheduleType, labels, startLabel);
 
-    currentMedicine = { id, name, startDate, dosesPerDay, totalDays, firstDoseTime, scheduleType, labels, schedule };
+    currentMedicine = { id, name, startDate, dosesPerDay, totalDays, firstDoseTime, scheduleType, labels, startLabel, schedule };
     medicines.push(currentMedicine);
     saveMedicines();
     renderHome();
@@ -203,6 +210,7 @@ function prepareSetup() {
     document.getElementById('startDate').valueAsDate = new Date();
     document.getElementById('dosesPerDay').value = '1';
     document.getElementById('firstDoseTime').value = '08:00';
+    document.getElementById('startLabel').value = 'AM';
     document.getElementById('scheduleType').value = 'timed';
     updateScheduleMode();
 }
@@ -236,12 +244,15 @@ function updateScheduleMode() {
     const type = document.getElementById('scheduleType').value;
     const labelContainer = document.getElementById('labelInputs');
     const firstDoseGroup = document.getElementById('firstDoseGroup');
+    const startLabelGroup = document.getElementById('startLabelGroup');
     if (type === 'label') {
         firstDoseGroup.classList.add('hidden');
+        startLabelGroup.classList.remove('hidden');
         labelContainer.classList.remove('hidden');
         updateLabelInputs();
     } else {
         firstDoseGroup.classList.remove('hidden');
+        startLabelGroup.classList.add('hidden');
         labelContainer.classList.add('hidden');
         labelContainer.innerHTML = '';
     }
