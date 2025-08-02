@@ -248,6 +248,22 @@
             <h2 style="margin-bottom: 20px; color: #374151;">Set Up Your Medicine</h2>
             
             <div class="form-group">
+                <label for="scheduleType">Schedule Type</label>
+                <select id="scheduleType">
+                    <option value="timed">Specific times</option>
+                    <option value="label">AM/PM labels</option>
+                </select>
+            </div>
+
+            <div class="form-group hidden" id="startLabelGroup">
+                <label for="startLabel">First Dose Label</label>
+                <select id="startLabel">
+                    <option value="AM">AM</option>
+                    <option value="PM">PM</option>
+                </select>
+            </div>
+
+            <div class="form-group">
                 <label for="medicineName">Medicine Name</label>
                 <input type="text" id="medicineName" placeholder="e.g., Ibuprofen">
             </div>
@@ -270,14 +286,6 @@
                     <option value="3">3 doses per day</option>
                     <option value="4">4 doses per day</option>
                     <option value="6">6 doses per day</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="scheduleType">Schedule Type</label>
-                <select id="scheduleType">
-                    <option value="timed">Specific times</option>
-                    <option value="label">AM/PM labels</option>
                 </select>
             </div>
 
