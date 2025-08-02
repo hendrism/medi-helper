@@ -179,12 +179,16 @@
         text-decoration: line-through;
     }
 
-    .setup-screen {
-        display: block;
-    }
-
-    .tracker-screen {
-        display: none;
+    .medicine-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px;
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        gap: 12px;
     }
 
     .progress-summary {
@@ -229,9 +233,17 @@
             <h1>💊 Medicine Tracker</h1>
             <p>Never miss a dose</p>
         </div>
+    <!-- Home Screen -->
+    <div id="homeScreen">
+        <div class="card">
+            <h2 style="margin-bottom: 20px; color: #374151;">My Medicines</h2>
+            <div id="medicineList"></div>
+            <button class="btn" onclick="showScreen('setup')">Add Medicine</button>
+        </div>
+    </div>
 
     <!-- Setup Screen -->
-    <div id="setupScreen" class="setup-screen">
+    <div id="setupScreen" class="hidden">
         <div class="card">
             <h2 style="margin-bottom: 20px; color: #374151;">Set Up Your Medicine</h2>
             
@@ -243,6 +255,11 @@
             <div class="form-group">
                 <label for="startDate">Start Date</label>
                 <input type="date" id="startDate">
+            </div>
+
+            <div class="form-group">
+                <label for="firstDoseTime">First Dose Time</label>
+                <input type="time" id="firstDoseTime" value="08:00">
             </div>
 
             <div class="form-group">
@@ -266,7 +283,7 @@
     </div>
 
     <!-- Tracker Screen -->
-    <div id="trackerScreen" class="tracker-screen">
+    <div id="trackerScreen" class="hidden">
         <div class="progress-summary">
             <div class="progress-text" id="progressText">0 of 0 doses taken</div>
             <div class="progress-bar">
@@ -277,7 +294,7 @@
         <div class="card">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h2 id="medicineTitle" style="color: #374151;"></h2>
-                <button class="btn btn-secondary" onclick="resetApp()" style="width: auto; padding: 8px 16px; font-size: 14px;">New Medicine</button>
+                <button class="btn btn-secondary" onclick="showScreen('home')" style="width: auto; padding: 8px 16px; font-size: 14px;">Home</button>
             </div>
             
             <div id="doseSchedule" class="dose-grid"></div>
@@ -285,177 +302,7 @@
     </div>
 </div>
 
-<script>
-    let medicineData = {
-        name: '',
-        startDate: '',
-        dosesPerDay: 1,
-        totalDays: 1,
-        schedule: []
-    };
-
-    // Set today's date as default
-    document.getElementById('startDate').valueAsDate = new Date();
-
-    function generateDoseTimes(dosesPerDay) {
-        const times = [];
-        if (dosesPerDay === 1) {
-            times.push('08:00');
-        } else if (dosesPerDay === 2) {
-            times.push('08:00', '20:00');
-        } else if (dosesPerDay === 3) {
-            times.push('08:00', '14:00', '20:00');
-        } else if (dosesPerDay === 4) {
-            times.push('08:00', '12:00', '16:00', '20:00');
-        } else if (dosesPerDay === 6) {
-            times.push('08:00', '10:00', '12:00', '14:00', '16:00', '18:00');
-        }
-        return times;
-    }
-
-    function formatDate(date) {
-        return date.toLocaleDateString('en-US', { 
-            weekday: 'long', 
-            month: 'short', 
-            day: 'numeric' 
-        });
-    }
-
-    function startTracking() {
-        const name = document.getElementById('medicineName').value.trim();
-        const startDate = document.getElementById('startDate').value;
-        const dosesPerDay = parseInt(document.getElementById('dosesPerDay').value);
-        const totalDays = parseInt(document.getElementById('totalDays').value);
-
-        if (!name || !startDate || !totalDays) {
-            alert('Please fill in all fields');
-            return;
-        }
-
-        medicineData = {
-            name,
-            startDate,
-            dosesPerDay,
-            totalDays,
-            schedule: []
-        };
-
-        // Generate schedule
-        const startDateObj = new Date(startDate);
-        const doseTimes = generateDoseTimes(dosesPerDay);
-
-        for (let day = 0; day < totalDays; day++) {
-            const currentDate = new Date(startDateObj);
-            currentDate.setDate(startDateObj.getDate() + day);
-            
-            const daySchedule = {
-                date: currentDate,
-                doses: doseTimes.map((time, index) => ({
-                    id: `day${day}_dose${index}`,
-                    time,
-                    completed: false
-                }))
-            };
-            
-            medicineData.schedule.push(daySchedule);
-        }
-
-        renderTracker();
-        showScreen('tracker');
-    }
-
-    function renderTracker() {
-        document.getElementById('medicineTitle').textContent = medicineData.name;
-        
-        const scheduleContainer = document.getElementById('doseSchedule');
-        scheduleContainer.innerHTML = '';
-
-        medicineData.schedule.forEach((day, dayIndex) => {
-            const dayElement = document.createElement('div');
-            dayElement.className = 'day-section';
-            
-            const completedDoses = day.doses.filter(dose => dose.completed).length;
-            const totalDoses = day.doses.length;
-            
-            dayElement.innerHTML = `
-                <div class="day-header">
-                    <span>${formatDate(day.date)}</span>
-                    <span class="day-progress">${completedDoses}/${totalDoses}</span>
-                </div>
-            `;
-
-            day.doses.forEach(dose => {
-                const doseElement = document.createElement('div');
-                doseElement.className = `dose-item ${dose.completed ? 'completed' : ''}`;
-                doseElement.innerHTML = `
-                    <input type="checkbox" class="dose-checkbox" 
-                           ${dose.completed ? 'checked' : ''} 
-                           onchange="toggleDose('${dose.id}')">
-                    <span class="dose-time">${dose.time}</span>
-                `;
-                dayElement.appendChild(doseElement);
-            });
-
-            scheduleContainer.appendChild(dayElement);
-        });
-
-        updateProgress();
-    }
-
-    function toggleDose(doseId) {
-        for (let day of medicineData.schedule) {
-            for (let dose of day.doses) {
-                if (dose.id === doseId) {
-                    dose.completed = !dose.completed;
-                    renderTracker();
-                    return;
-                }
-            }
-        }
-    }
-
-    function updateProgress() {
-        let totalDoses = 0;
-        let completedDoses = 0;
-
-        medicineData.schedule.forEach(day => {
-            totalDoses += day.doses.length;
-            completedDoses += day.doses.filter(dose => dose.completed).length;
-        });
-
-        const percentage = totalDoses > 0 ? (completedDoses / totalDoses) * 100 : 0;
-        
-        document.getElementById('progressText').textContent = 
-            `${completedDoses} of ${totalDoses} doses taken`;
-        document.getElementById('progressFill').style.width = `${percentage}%`;
-    }
-
-    function resetApp() {
-        document.getElementById('medicineName').value = '';
-        document.getElementById('totalDays').value = '';
-        document.getElementById('startDate').valueAsDate = new Date();
-        document.getElementById('dosesPerDay').value = '1';
-        showScreen('setup');
-    }
-
-    function showScreen(screen) {
-        if (screen === 'setup') {
-            document.getElementById('setupScreen').classList.remove('hidden');
-            document.getElementById('trackerScreen').classList.add('hidden');
-        } else {
-            document.getElementById('setupScreen').classList.add('hidden');
-            document.getElementById('trackerScreen').classList.remove('hidden');
-        }
-    }
-
-    // Register service worker for offline capabilities
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/service-worker.js');
-        });
-    }
-    console.log('Medicine Tracker PWA ready!');
-</script>
+<script src="app.js"></script>
 
 </body>
 </html>
