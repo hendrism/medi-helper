@@ -19,7 +19,9 @@ function getProgress(med) {
     return { total, completed };
 }
 
-document.getElementById('startDate').valueAsDate = new Date();
+if (typeof document !== 'undefined') {
+    document.getElementById('startDate').valueAsDate = new Date();
+}
 
 function generateDoseTimes(dosesPerDay, firstDoseTime) {
     const times = [];
@@ -45,6 +47,34 @@ function formatDate(date) {
     });
 }
 
+function createSchedule(id, startDate, dosesPerDay, totalDays, firstDoseTime) {
+    const startDateObj = new Date(startDate);
+    const doseTimes = generateDoseTimes(dosesPerDay, firstDoseTime);
+    const totalDoses = dosesPerDay * totalDays;
+    const schedule = [];
+    let created = 0;
+    let day = 0;
+
+    while (created < totalDoses) {
+        const currentDate = new Date(startDateObj);
+        currentDate.setDate(startDateObj.getDate() + day);
+        const daySchedule = { date: currentDate.toISOString(), doses: [] };
+        for (let index = 0; index < doseTimes.length && created < totalDoses; index++) {
+            const time = doseTimes[index];
+            if (day === 0 && time < firstDoseTime) continue;
+            daySchedule.doses.push({
+                id: `${id}_day${day}_dose${daySchedule.doses.length}`,
+                time,
+                completed: false
+            });
+            created++;
+        }
+        schedule.push(daySchedule);
+        day++;
+    }
+    return schedule;
+}
+
 function startTracking() {
     const name = document.getElementById('medicineName').value.trim();
     const startDate = document.getElementById('startDate').value;
@@ -58,24 +88,7 @@ function startTracking() {
     }
 
     const id = Date.now().toString();
-    const startDateObj = new Date(startDate);
-    const doseTimes = generateDoseTimes(dosesPerDay, firstDoseTime);
-
-    const schedule = [];
-    for (let day = 0; day < totalDays; day++) {
-        const currentDate = new Date(startDateObj);
-        currentDate.setDate(startDateObj.getDate() + day);
-        const daySchedule = { date: currentDate.toISOString(), doses: [] };
-        doseTimes.forEach((time, index) => {
-            if (day === 0 && time < firstDoseTime) return;
-            daySchedule.doses.push({
-                id: `${id}_day${day}_dose${index}`,
-                time,
-                completed: false
-            });
-        });
-        schedule.push(daySchedule);
-    }
+    const schedule = createSchedule(id, startDate, dosesPerDay, totalDays, firstDoseTime);
 
     currentMedicine = { id, name, startDate, dosesPerDay, totalDays, firstDoseTime, schedule };
     medicines.push(currentMedicine);
@@ -199,13 +212,19 @@ function showScreen(screen) {
     }
 }
 
-loadMedicines();
-renderHome();
-showScreen('home');
+if (typeof window !== 'undefined') {
+    loadMedicines();
+    renderHome();
+    showScreen('home');
 
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js');
-    });
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/service-worker.js');
+        });
+    }
+    console.log('Medicine Tracker PWA ready!');
 }
-console.log('Medicine Tracker PWA ready!');
+
+if (typeof module !== 'undefined') {
+    module.exports = { createSchedule };
+}

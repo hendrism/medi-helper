@@ -1,0 +1,8 @@
+{
+  "name": "medi-helper",
+  "version": "1.0.0",
+  "description": "Medication schedule helper",
+  "scripts": {
+    "test": "node schedule.test.js"
+  }
+}
