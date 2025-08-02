@@ -1,13 +1,35 @@
 let medicines = [];
 let currentMedicine = null;
 
+const STORAGE_KEY = 'medicines';
+const STORAGE_VERSION = 1;
+
 function saveMedicines() {
-    localStorage.setItem('medicines', JSON.stringify(medicines));
+    const data = { version: STORAGE_VERSION, medicines };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
 function loadMedicines() {
-    const stored = localStorage.getItem('medicines');
-    medicines = stored ? JSON.parse(stored) : [];
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (!stored) {
+        medicines = [];
+        return;
+    }
+    try {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) {
+            medicines = parsed;
+            saveMedicines();
+        } else {
+            medicines = Array.isArray(parsed.medicines) ? parsed.medicines : [];
+            if (parsed.version !== STORAGE_VERSION) {
+                saveMedicines();
+            }
+        }
+    } catch (e) {
+        console.error('Failed to load medicines from storage', e);
+        medicines = [];
+    }
 }
 
 function getProgress(med) {
