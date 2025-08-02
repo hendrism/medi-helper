@@ -220,7 +220,18 @@ if (typeof window !== 'undefined') {
 
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/service-worker.js');
+            navigator.serviceWorker
+                .register('/service-worker.js')
+                .then(() => {
+                    // Reload the page when the service worker signals an update
+                    navigator.serviceWorker.addEventListener('message', event => {
+                        if (event.data && event.data.type === 'SW_UPDATED') {
+                            // A new service worker has activated, so reload to get the latest version
+                            window.location.reload();
+                        }
+                    });
+                })
+                .catch(err => console.error('Service worker registration failed:', err));
         });
     }
     console.log('Medicine Tracker PWA ready!');
