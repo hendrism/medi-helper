@@ -48,7 +48,8 @@ function formatDate(date) {
 }
 
 function createSchedule(id, startDate, dosesPerDay, totalDays, firstDoseTime) {
-    const startDateObj = new Date(startDate);
+    const [year, month, dayNumber] = startDate.split('-').map(Number);
+    const startDateObj = new Date(year, month - 1, dayNumber);
     const doseTimes = generateDoseTimes(dosesPerDay, firstDoseTime);
     const totalDoses = dosesPerDay * totalDays;
     const schedule = [];
